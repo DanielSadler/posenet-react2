@@ -21,8 +21,8 @@ export default function App() {
   };
   const runPosenet = async () => {
     const posenet_model = await posenet.load({
-      inputResolution: { width: 640, height: 480 },
-      scale: 0.8,
+      inputResolution: { width: 640, height: 360 },
+      scale: 1,
     });
     //
     setInterval(() => {
@@ -36,17 +36,29 @@ export default function App() {
     const ctx = canvas.getContext("2d");
     canvas.width = videoWidth;
     canvas.height = videoHeight;
-    console.log(canvas.width);
+    console.log(pose);
     drawKeypoints(pose["keypoints"], 0.6, ctx);
     drawSkeleton(pose["keypoints"], 0.7, ctx);
   };
+  async function startCapture(displayMediaOptions) {
+    let captureStream = null;
+  
+    try {
+      captureStream =
+        await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
+    } catch (err) {
+      console.error(`Error: ${err}`);
+    }
+    return captureStream;
+  }
+  startCapture()
   return (
     <div className="App">
       <header className="App-header">
         <video
           ref={videoRef}
           loop={true}
-          src="./HowToLiftGood.mp4"
+          src="./HowToLiftBad.mp4"
           height={360}
           width={640}
           style={{
